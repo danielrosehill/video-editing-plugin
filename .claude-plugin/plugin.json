@@ -8,10 +8,7 @@
     "url": "https://danielrosehill.com"
   },
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/danielrosehill/video-editing-plugin"
-  },
+  "repository": "https://github.com/danielrosehill/video-editing-plugin",
   "commands": [
     "./commands/add-watermark.md",
     "./commands/check-codecs.md",
