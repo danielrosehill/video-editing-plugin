@@ -2,7 +2,7 @@
 
 Internal roadmap for the public `video-editing` plugin. Gitignored — never ships to the published repo.
 
-Last updated: 2026-04-30 (after Sprint 7).
+Last updated: 2026-04-30 (after Sprint 8).
 
 ## Assumptions
 
@@ -23,7 +23,8 @@ Last updated: 2026-04-30 (after Sprint 7).
 | 1.7.0 | +2 normalize-audio + auto-cut-silences, legacy cleanup | sprint 5 |
 | 1.8.0 | +6 subtitles + deliverables + graphics + music-video | sprint 6 |
 | 1.9.0 | +3 NAS lifecycle (setup-nas, pull-from-nas, push-to-nas) | sprint 7 |
-| **current: 1.9.0** | **23 skills** | |
+| 1.10.0 | +3 clip management (sort-clips-by, scrub-takes, dedupe-clips); retired 3 legacy commands | sprint 8 |
+| **current: 1.10.0** | **29 skills, 3 commands** | |
 
 ---
 
@@ -76,6 +77,12 @@ Two-tier concept: **index** (base dir) → **project** (per-video workspace).
 - `onboard` extended: subtitle backend + model + style fields, audio-to-video templates seed.
 - `deps-setup` extended: faster-whisper + demucs added to install menu; whisper.cpp documented as a manual install.
 
+### Clip management (v1.10.0 — sprint 8)
+- `sort-clips-by/SKILL.md` — bucket a flat folder of media into subfolders by `resolution` / `aspect` / `fps` / `codec` / `kind` (photo vs video). `mv`-only, dry-run preview before commit. Supersedes `commands/separate-4k.md` and `commands/separate-photos-and-video.md` (deleted).
+- `scrub-takes/SKILL.md` — quarantine clips below a minimum duration (default 3s) — moves to `_rejected/` by default; `delete` mode requires explicit second confirmation.
+- `dedupe-clips/SKILL.md` — `exact` (sha256) or `perceptual` (sample-frame dHash with configurable Hamming threshold) duplicate detection; per-cluster keeper rule (largest/oldest/newest/first); flatten-and-dedupe sub-flow that supersedes the legacy `commands/videos-here.md`.
+- Retired legacy commands: `separate-4k.md`, `separate-photos-and-video.md`, `videos-here.md`.
+
 ### Housekeeping
 - `.gitignore` excludes `planning/` so this doc never ships.
 
@@ -113,18 +120,13 @@ Roughly in priority order. None of these block what's already shipped.
 - `open-in-kdenlive` — open a project's `working/` dir in Kdenlive.
 - `render-from-library` — assemble a single video from a library directory (concat + simple ordering).
 
-### Clip management
-- `sort-clips-by` — sort a clip folder into subfolders by aspect ratio / framerate / resolution. (Existing `commands/separate-4k.md` and `commands/separate-photos-and-video.md` are precursors that should probably fold into this.)
-- `scrub-takes` — remove accidental short takes (configurable minimum duration).
-- `dedupe-clips` — find/remove duplicate or near-duplicate clips (hash + perceptual).
+### Clip management — shipped in sprint 8 (v1.10.0)
 
 ### NAS lifecycle — shipped in sprint 7 (v1.9.0)
 
 ### Remaining legacy command convergence
 - `commands/add-watermark.md` is now superseded by `burn-graphics` — pending verification, then delete.
-- `cut-video-segment.md`, `merge-videos.md`, `separate-4k.md`, `separate-photos-and-video.md`, `videos-here.md` are still v1.0 scratch notes. Per-command decision pending: keep as quick command, fold into a new skill, or delete.
-  - `separate-4k.md` + `separate-photos-and-video.md` should likely fold into `sort-clips-by`.
-  - `videos-here.md` (flatten + dedupe) overlaps with `dedupe-clips`.
+- `cut-video-segment.md`, `merge-videos.md` are still v1.0 scratch notes. Per-command decision pending: keep as quick command, fold into a new skill, or delete.
 
 ### Agentic editing (from `deps-setup`)
 - `agentic-edit` — wrap `video-use` / `VideoAgent` for "make a 60-second cut down of this hour-long stream".
