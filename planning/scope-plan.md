@@ -2,7 +2,7 @@
 
 Internal roadmap for the public `video-editing` plugin. Gitignored — never ships to the published repo.
 
-Last updated: 2026-04-30 (after Sprint 10).
+Last updated: 2026-04-30 (after Sprint 11).
 
 ## Assumptions
 
@@ -26,7 +26,8 @@ Last updated: 2026-04-30 (after Sprint 10).
 | 1.10.0 | +3 clip management (sort-clips-by, scrub-takes, dedupe-clips); retired 3 legacy commands | sprint 8 |
 | 1.11.0 | +3 editor integration (open-in-kdenlive, mlt-render, render-from-library) | sprint 9 |
 | 1.12.0 | +2 agentic editing (agentic-edit, editly-render) | sprint 10 |
-| **current: 1.12.0** | **34 skills, 3 commands** | |
+| 1.13.0 | +1 cut-segment skill; retired all 3 remaining legacy commands | sprint 11 |
+| **current: 1.13.0** | **35 skills, 0 commands** | |
 
 ---
 
@@ -78,6 +79,11 @@ Two-tier concept: **index** (base dir) → **project** (per-video workspace).
 - `audio-to-music-video/SKILL.md` — audio + cover art + named template (`waveform-bottom`, `spectrum-bars`, `circular-cqt-cover`, `vector-scope`, `volume-meter`) → composited music video in one ffmpeg pass. Templates live in `preferences.audio_to_video_templates`.
 - `onboard` extended: subtitle backend + model + style fields, audio-to-video templates seed.
 - `deps-setup` extended: faster-whisper + demucs added to install menu; whisper.cpp documented as a manual install.
+
+### Legacy command convergence (v1.13.0 — sprint 11)
+- `cut-segment/SKILL.md` — multi-range time-based extraction, lossless `copy` mode (default) and `precise` re-encode mode for frame-accurate cuts. Optional `stitch` to concatenate the segments.
+- Retired all remaining legacy commands: `add-watermark.md` (use `burn-graphics`), `merge-videos.md` (use `render-from-library`), `cut-video-segment.md` (use `cut-segment`).
+- `commands/` directory removed; manifest `commands` array now empty.
 
 ### Agentic editing (v1.12.0 — sprint 10)
 - `agentic-edit/SKILL.md` — driver for `video-use` (default) or `VideoAgent` (HKU). Asks the backend for a JSON cut-list given a goal prompt; validates timestamps; optionally renders the cut by stream-copying segments and concatenating (falls back to `render-from-library` re-encode on lossless concat failure). Cut-lists persist under `<data>/cut-lists/`.
@@ -132,9 +138,7 @@ Roughly in priority order. None of these block what's already shipped.
 
 ### NAS lifecycle — shipped in sprint 7 (v1.9.0)
 
-### Remaining legacy command convergence
-- `commands/add-watermark.md` is now superseded by `burn-graphics` — pending verification, then delete.
-- `cut-video-segment.md`, `merge-videos.md` are still v1.0 scratch notes. Per-command decision pending: keep as quick command, fold into a new skill, or delete.
+### Legacy command convergence — shipped in sprint 11 (v1.13.0)
 
 ### Agentic editing — shipped in sprint 10 (v1.12.0)
 
