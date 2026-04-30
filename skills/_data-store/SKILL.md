@@ -22,6 +22,10 @@ ${XDG_DATA_HOME:-$HOME/.local/share}/claude-media-plugins/video-editing/
 | `system-profile.json` | Detected GPU, ffmpeg encoders, codecs                          |
 | `render-profiles.json`| Named, reusable render presets (codec, resolution, bitrate)    |
 | `nas.json`            | NAS path / mount, raw + render destinations                    |
+| `preferences.json`    | Per-user prefs: EQ preset path, loudness target, default render profile, python venv path, installed tools |
+| `presets/`            | Bundled-in copies of user-supplied presets (e.g. talking-head EQ) |
+| `venv/`               | Shared `uv`-managed Python virtualenv for moviepy, auto-editor, etc. |
+| `tools/`              | Cloned repos for tools without a PyPI release (VideoAgent, vit) |
 
 ## Conventions
 
