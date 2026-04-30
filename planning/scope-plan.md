@@ -2,7 +2,7 @@
 
 Internal roadmap for the public `video-editing` plugin. Gitignored — never ships to the published repo.
 
-Last updated: 2026-04-30 (after Sprint 9).
+Last updated: 2026-04-30 (after Sprint 10).
 
 ## Assumptions
 
@@ -25,7 +25,8 @@ Last updated: 2026-04-30 (after Sprint 9).
 | 1.9.0 | +3 NAS lifecycle (setup-nas, pull-from-nas, push-to-nas) | sprint 7 |
 | 1.10.0 | +3 clip management (sort-clips-by, scrub-takes, dedupe-clips); retired 3 legacy commands | sprint 8 |
 | 1.11.0 | +3 editor integration (open-in-kdenlive, mlt-render, render-from-library) | sprint 9 |
-| **current: 1.11.0** | **32 skills, 3 commands** | |
+| 1.12.0 | +2 agentic editing (agentic-edit, editly-render) | sprint 10 |
+| **current: 1.12.0** | **34 skills, 3 commands** | |
 
 ---
 
@@ -77,6 +78,10 @@ Two-tier concept: **index** (base dir) → **project** (per-video workspace).
 - `audio-to-music-video/SKILL.md` — audio + cover art + named template (`waveform-bottom`, `spectrum-bars`, `circular-cqt-cover`, `vector-scope`, `volume-meter`) → composited music video in one ffmpeg pass. Templates live in `preferences.audio_to_video_templates`.
 - `onboard` extended: subtitle backend + model + style fields, audio-to-video templates seed.
 - `deps-setup` extended: faster-whisper + demucs added to install menu; whisper.cpp documented as a manual install.
+
+### Agentic editing (v1.12.0 — sprint 10)
+- `agentic-edit/SKILL.md` — driver for `video-use` (default) or `VideoAgent` (HKU). Asks the backend for a JSON cut-list given a goal prompt; validates timestamps; optionally renders the cut by stream-copying segments and concatenating (falls back to `render-from-library` re-encode on lossless concat failure). Cut-lists persist under `<data>/cut-lists/`.
+- `editly-render/SKILL.md` — wrapper around the `editly` CLI. Validates the JSON/JSON5 spec, pre-flights all referenced source files, runs `editly`, and reports the deliverable. `--fast` mode for previews; warns about Cairo deps on Linux.
 
 ### Editor integration (v1.11.0 — sprint 9)
 - `open-in-kdenlive/SKILL.md` — `setsid`-detached launch of Kdenlive on a project's `working/` (most-recent `.kdenlive` auto-picked) or on a directly supplied path.
@@ -131,9 +136,7 @@ Roughly in priority order. None of these block what's already shipped.
 - `commands/add-watermark.md` is now superseded by `burn-graphics` — pending verification, then delete.
 - `cut-video-segment.md`, `merge-videos.md` are still v1.0 scratch notes. Per-command decision pending: keep as quick command, fold into a new skill, or delete.
 
-### Agentic editing (from `deps-setup`)
-- `agentic-edit` — wrap `video-use` / `VideoAgent` for "make a 60-second cut down of this hour-long stream".
-- `editly-render` — wrap `editly` for "compose this slideshow from a JSON spec".
+### Agentic editing — shipped in sprint 10 (v1.12.0)
 
 ---
 
