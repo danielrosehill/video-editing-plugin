@@ -1,8 +1,8 @@
 ---
 name: deps-setup
-description: Install optional video-editing tools (moviepy, auto-editor, video-use, VideoAgent, vit, LosslessCut, editly). Lets the user pick which to install; Python tools share a single uv-managed venv recorded in preferences.json. Use when the user says "install video tools", "set up moviepy", "install auto-editor", "deps setup", "install lossless cut".
+description: Install optional video-editing tools (moviepy, auto-editor, video-use, VideoAgent, vit, LosslessCut, editly) plus media-inspection helpers (exiftool, mediainfo). Lets the user pick which to install; Python tools share a single uv-managed venv recorded in preferences.json. Use when the user says "install video tools", "set up moviepy", "install auto-editor", "deps setup", "install lossless cut", "install mediainfo", "install exiftool".
 disable-model-invocation: false
-allowed-tools: Bash(test *), Bash(mkdir *), Bash(curl *), Bash(uv *), Bash(git *), Bash(npm *), Bash(flatpak *), Bash(jq *), Bash(command *), Bash(date *), Bash(realpath *), Bash(ls *), Bash(which *), Read, Write
+allowed-tools: Bash(test *), Bash(mkdir *), Bash(curl *), Bash(uv *), Bash(git *), Bash(npm *), Bash(flatpak *), Bash(jq *), Bash(command *), Bash(date *), Bash(realpath *), Bash(ls *), Bash(which *), Bash(sudo apt *), Bash(apt *), Read, Write
 ---
 
 # Deps Setup
@@ -31,6 +31,8 @@ The venv path is stored as `preferences.python_venv` so it can be sourced later 
 | LosslessCut | https://github.com/mifi/lossless-cut | Electron app | flatpak: `no.mifi.losslesscut` (fallback: AppImage) |
 | editly | https://github.com/mifi/editly | Node.js | `npm install -g editly` (warn: needs Cairo + ffmpeg) |
 | whisper.cpp | https://github.com/ggerganov/whisper.cpp | C++ binary | manual — clone, `make`, download GGML model. Record binary + model paths in preferences via `onboard`. |
+| exiftool | https://exiftool.org | Perl CLI (apt) | `sudo apt install -y libimage-exiftool-perl` — uniform metadata reader for both images and video (Width / Height / Rotation), useful when ffprobe's CSV output needs sanitising. |
+| mediainfo | https://mediaarea.net/en/MediaInfo | C++ CLI (apt) | `sudo apt install -y mediainfo` — reports `DisplayAspectRatio` and `Rotation` post-correction; ideal when you want the *displayed* aspect rather than raw stream dims. |
 
 ## Procedure
 
@@ -78,6 +80,8 @@ Multi-select. Show each tool's purpose in one line:
 - **LosslessCut** — GUI for fast lossless trim/cut
 - **editly** — declarative JSON → video composition (Node)
 - **whisper.cpp** — alternative pure-C++ whisper backend (manual install, see notes)
+- **exiftool** — uniform metadata reader for both images and video (`sudo apt install -y libimage-exiftool-perl`). Single tool covers `ImageWidth`, `ImageHeight`, `Rotation`, EXIF on JPEG/HEIC/DNG/WEBP/MP4/MOV — useful as a uniform parser when ffprobe's CSV output is fragile.
+- **mediainfo** — purpose-built media-inspection CLI (`sudo apt install -y mediainfo`). Reports `DisplayAspectRatio` and `Rotation` already corrected for what the player would show; cleanest single source of truth for video orientation.
 
 ### 5. Install per selection
 
@@ -116,6 +120,14 @@ fi
 npm install -g editly
 ```
 
+#### exiftool / mediainfo (apt)
+
+```bash
+sudo apt install -y libimage-exiftool-perl mediainfo
+```
+
+Verify with `exiftool -ver` and `mediainfo --Version`. Record absolute paths in `preferences.json` under `tools.exiftool.path` and `tools.mediainfo.path` (`command -v exiftool`, `command -v mediainfo`) so other skills (and other plugins, e.g. `phone-ops:import-media`) can locate them without re-probing.
+
 ### 6. Record results
 
 Update `preferences.json`:
@@ -130,7 +142,9 @@ Update `preferences.json`:
     "lossless-cut":{ "installed": true, "method": "flatpak", "id": "no.mifi.losslesscut" },
     "editly":      { "installed": true, "method": "npm-global", "version": "..." },
     "faster-whisper": { "installed": true, "method": "uv-pip", "venv": "..." },
-    "demucs":      { "installed": true, "method": "uv-pip", "venv": "..." }
+    "demucs":      { "installed": true, "method": "uv-pip", "venv": "..." },
+    "exiftool":    { "installed": true, "method": "apt", "path": "/usr/bin/exiftool", "version": "..." },
+    "mediainfo":   { "installed": true, "method": "apt", "path": "/usr/bin/mediainfo", "version": "..." }
   }
 }
 ```
